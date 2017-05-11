@@ -1,19 +1,80 @@
 //: Playground - noun: a place where people can play
 
-func breadthFirstSearch(_ graph: Graph, source: Node) -> [String] {
+var maze: [[String]] = [["^", "0", "0", "0", "0", "0", "0", "1"],
+            ["0", "1", "1", "1", "1", "1", "0", "0"],
+            ["0", "0", "0", "0", "0", "1", "1", "1"],
+            ["0", "1", "1", "1", "0", "1", "0", "0"],
+            ["0", "1", "0", "1", "0", "0", "0", "1"],
+            ["0", "0", "0", "1", "0", "1", "0", "*"]]
+
+func maze2Graph(maze: [[String]]) -> Graph {
+    let g = Graph()
+    for row in 0..<maze.count {
+        for col in 0..<maze[0].count {
+            print("\(maze[row][col]), \(row), \(col)")
+            g.addNode(maze[row][col], x: row, y: col)
+        }
+    }
+    return g
+}
+
+func getNeighbours(current: Node, grid: [[String]]) -> [Edge] {
+    var neighbours: [Edge] = []
+    let OBSTACLE = "1"
+    // west
+    let westX = current.x;
+    let westY = current.y - 1;
+    if current.y > 0 &&  grid[westX][westY] != OBSTACLE {
+        neighbours.append(Edge(Node(grid[westX][westY], x: westX, y: westY, parent: current)));
+    }
+    // south
+    let southX = current.x + 1;
+    let southY = current.y;
+    if current.x < grid.count - 1 && grid[southX][southY] != OBSTACLE {
+        neighbours.append(Edge(Node(grid[southX][southY], x: southX, y: southY, parent: current)));
+    }
+    // east
+    let eastX = current.x;
+    let eastY = current.y + 1;
+    if current.y < grid[0].count - 1 && grid[eastX][eastY] != OBSTACLE {
+        neighbours.append(Edge(Node(grid[eastX][eastY], x: eastX, y: eastY, parent: current)));
+    }
+    // north
+    let northX = current.x - 1;
+    let northY = current.y;
+    if current.x > 0 && grid[northX][northY] != OBSTACLE {
+        neighbours.append(Edge(Node(grid[northX][northY], x: northX, y: northY, parent: current)));
+    }
+    
+    return neighbours;
+}
+
+
+func breadthFirstSearch(_ graph: Graph, source: Node, target: Node) -> [Node] {
+    var distance = 1
     var queue = Queue<Node>()
     queue.enqueue(source)
+    source.distance = distance
     
-    var nodesExplored = [source.name]
+    var nodesExplored = [source]
     source.visited = true
     
     while let node = queue.dequeue() {
-        for edge in node.neighbours {
+        for edge in getNeighbours(current: node, grid: maze) {
             let currentNode = edge.neighbour
             if !currentNode.visited {
+                distance += 1
+                currentNode.distance = distance
+                print(currentNode)
                 queue.enqueue(currentNode)
+    
                 currentNode.visited = true
-                nodesExplored.append(currentNode.name)
+                nodesExplored.append(currentNode)
+                
+                print("Current:\(currentNode) -> \(target)")
+                if currentNode == target {
+                    break
+                }
             }
         }
     }
@@ -21,29 +82,8 @@ func breadthFirstSearch(_ graph: Graph, source: Node) -> [String] {
     return nodesExplored
 }
 
-
-
-let graph = Graph()
-
-let nodeA = graph.addNode("a")
-let nodeB = graph.addNode("b")
-let nodeC = graph.addNode("c")
-let nodeD = graph.addNode("d")
-let nodeE = graph.addNode("e")
-let nodeF = graph.addNode("f")
-let nodeG = graph.addNode("g")
-let nodeH = graph.addNode("h")
-
-graph.addEdge(nodeA, neighbour: nodeB)
-graph.addEdge(nodeA, neighbour: nodeC)
-graph.addEdge(nodeB, neighbour: nodeD)
-graph.addEdge(nodeB, neighbour: nodeE)
-graph.addEdge(nodeC, neighbour: nodeF)
-graph.addEdge(nodeC, neighbour: nodeG)
-graph.addEdge(nodeE, neighbour: nodeH)
-graph.addEdge(nodeE, neighbour: nodeF)
-graph.addEdge(nodeF, neighbour: nodeG)
-
-
-let nodesExplored = breadthFirstSearch(graph, source: nodeA)
-print(nodesExplored)
+let g = maze2Graph(maze: maze)
+let source = Node("^", x: 0, y: 0)
+let target = Node("*", x: maze.count - 1, y: maze[0].count - 1)
+let nodesExplored = breadthFirstSearch(g, source: source, target: target)
+//print(nodesExplored)

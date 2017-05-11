@@ -5,11 +5,22 @@ public class Node : CustomStringConvertible, Equatable {
     public private(set) var name: String
     public var distance: Int?
     public var visited: Bool
+    public var x: Int
+    public var y: Int
+    public var parent: Node?
     
-    public init(_ name: String) {
+    public convenience init(_ name: String, x: Int, y: Int, parent: Node?) {
+        self.init(name, x: x, y: y)
+        self.parent = parent
+    }
+    
+    public init(_ name: String, x: Int, y: Int) {
         self.name = name
+        self.x = x
+        self.y = y
         self.neighbours = []
         self.visited = false
+        self.parent = nil
     }
     
     public var description: String {
@@ -29,5 +40,5 @@ public class Node : CustomStringConvertible, Equatable {
 }
 
 public func == (_ lhs: Node, rhs: Node) -> Bool {
-    return lhs.name == rhs.name && lhs.neighbours == rhs.neighbours
+    return lhs.x == rhs.x && lhs.y == rhs.y
 }

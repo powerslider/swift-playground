@@ -6,8 +6,8 @@ public class Graph : CustomStringConvertible, Equatable {
         self.nodes = []
     }
     
-    public func addNode(_ name: String) -> Node {
-        let node = Node(name)
+    public func addNode(_ name: String, x: Int, y: Int) -> Node {
+        let node = Node(name, x: x, y: y)
         nodes.append(node)
         return node
     }
@@ -28,7 +28,7 @@ public class Graph : CustomStringConvertible, Equatable {
         return description
     }
     
-    public func findNodeWithname(_ name: String) -> Node {
+    public func findNodeWithName(_ name: String) -> Node {
         return nodes.filter { $0.name == name }.first!
     }
     
