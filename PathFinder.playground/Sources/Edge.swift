@@ -1,8 +1,20 @@
-public class Edge: Equatable {
-    public var neighbour: Node
+public class Edge : Equatable, CustomStringConvertible {
     
-    public init(_ neighbour: Node) {
+    public var neighbour: Node
+    public var direction: Direction
+    
+    public convenience init(to neighbour: Node, direction: Direction) {
+        self.init(to: neighbour)
+        self.direction = direction
+    }
+    
+    public init(to neighbour: Node) {
         self.neighbour = neighbour
+        self.direction = .NONE
+    }
+    
+    public var description: String {
+        return "Edge(to: \(neighbour), direction: \(direction))"
     }
 }
 

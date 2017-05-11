@@ -1,6 +1,6 @@
 //: Playground - noun: a place where people can play
 
-var maze: [[String]] = [["^", "0", "0", "0", "0", "0", "0", "1"],
+let maze = [["^", "0", "0", "0", "0", "0", "0", "1"],
             ["0", "1", "1", "1", "1", "1", "0", "0"],
             ["0", "0", "0", "0", "0", "1", "1", "1"],
             ["0", "1", "1", "1", "0", "1", "0", "0"],
@@ -25,27 +25,32 @@ func getNeighbours(current: Node, grid: [[String]]) -> [Edge] {
     let westX = current.x;
     let westY = current.y - 1;
     if current.y > 0 &&  grid[westX][westY] != OBSTACLE {
-        neighbours.append(Edge(Node(grid[westX][westY], x: westX, y: westY, parent: current)));
+        let westNode = Node(grid[westX][westY], x: westX, y: westY, parent: current)
+        neighbours.append(Edge(to: westNode, direction: .WEST));
     }
     // south
     let southX = current.x + 1;
     let southY = current.y;
     if current.x < grid.count - 1 && grid[southX][southY] != OBSTACLE {
-        neighbours.append(Edge(Node(grid[southX][southY], x: southX, y: southY, parent: current)));
+        let southNode = Node(grid[southX][southY], x: southX, y: southY, parent: current)
+        neighbours.append(Edge(to: southNode, direction: .SOUTH));
     }
     // east
     let eastX = current.x;
     let eastY = current.y + 1;
     if current.y < grid[0].count - 1 && grid[eastX][eastY] != OBSTACLE {
-        neighbours.append(Edge(Node(grid[eastX][eastY], x: eastX, y: eastY, parent: current)));
+        let eastNode = Node(grid[eastX][eastY], x: eastX, y: eastY, parent: current)
+        neighbours.append(Edge(to: eastNode, direction: .EAST));
     }
     // north
     let northX = current.x - 1;
     let northY = current.y;
     if current.x > 0 && grid[northX][northY] != OBSTACLE {
-        neighbours.append(Edge(Node(grid[northX][northY], x: northX, y: northY, parent: current)));
+        let northNode = Node(grid[northX][northY], x: northX, y: northY, parent: current)
+        neighbours.append(Edge(to: northNode, direction: .NORTH));
     }
     
+    print(neighbours)
     return neighbours;
 }
 
@@ -71,7 +76,6 @@ func breadthFirstSearch(_ graph: Graph, source: Node, target: Node) -> [Node] {
                 currentNode.visited = true
                 nodesExplored.append(currentNode)
                 
-                print("Current:\(currentNode) -> \(target)")
                 if currentNode == target {
                     break
                 }
