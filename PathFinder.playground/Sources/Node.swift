@@ -9,7 +9,7 @@ public class Node : CustomStringConvertible, Equatable {
     public var y: Int
     public var parent: Node?
     
-    public convenience init(_ name: String, x: Int, y: Int, parent: Node?) {
+    public convenience init(_ name: String, x: Int, y: Int, parent: Node) {
         self.init(name, x: x, y: y)
         self.parent = parent
     }
